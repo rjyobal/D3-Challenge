@@ -88,22 +88,39 @@ function renderCircles(circlesGroup, newXScale, chosenXAxis) {
 }
 
 // function used for updating circles group with new tooltip
-function updateToolTip(chosenXAxis, circlesGroup) {
+function updateToolTip(chosenXAxis, circlesGroup, chosenYAxis) {
 
   var label;
+  var labelSymbol = '';
 
   if (chosenXAxis === "poverty") {
     label = "Poverty:";
-  }
-  else {
+    labelSymbol = "%";
+  } 
+  else if (chosenXAxis === "age"){
     label = "Age:";
+  }
+  else{
+    label = "Household:";
+  }
+
+  var ylabel;
+
+  if (chosenYAxis === "healthcare") {
+    ylabel = "Healthcare:";
+  } 
+  else if (chosenYAxis === "obese"){
+    ylabel = "Obese:";
+  }
+  else{
+    ylabel = "Smokes:";
   }
 
   var toolTip = d3.tip()
     .attr("class", "tooltip")
     .offset([80, -60])
     .html(function(d) {
-      return (`${d.state}<br>${label} ${d[chosenXAxis]}%<br>LABELPLACEHOLDER`);
+      return (`${d.state}<br>${label} ${d[chosenXAxis]}${labelSymbol}<br>${ylabel} ${d[chosenYAxis]}%`);
     });
 
   circlesGroup.call(toolTip);
@@ -201,6 +218,7 @@ d3.csv("../assets/data/data.csv").then(journData=> {
     .attr("transform", "rotate(-90)")
     .attr("y", 0 - margin.left)
     .attr("x", 0 - (height / 2))
+    .attr("value", "healthcare") // value to grab for event listener
     .attr("dy", "1em")
     .classed("axis-text", true)
     .text("Lacks Healthcare (%)");
@@ -209,6 +227,7 @@ d3.csv("../assets/data/data.csv").then(journData=> {
     .attr("transform", "rotate(-90)")
     .attr("y", 0 - margin.left+20)
     .attr("x", 0 - (height / 2)+25)
+    .attr("value", "obese") // value to grab for event listener
     .attr("dy", "1em")
     .classed("axis-text", true)
     .text("Obese (%)");
@@ -217,12 +236,13 @@ d3.csv("../assets/data/data.csv").then(journData=> {
     .attr("transform", "rotate(-90)")
     .attr("y", 0 - margin.left+40)
     .attr("x", 0 - (height / 2)+25)
+    .attr("value", "smokes") // value to grab for event listener
     .attr("dy", "1em")
     .classed("axis-text", true)
     .text("Smokes (%)");
     
   // updateToolTip function above csv import
-  var circlesGroup = updateToolTip(chosenXAxis, circlesGroup);
+  var circlesGroup = updateToolTip(chosenXAxis, circlesGroup, chosenYAxis);
 
   // x axis labels event listener
   labelsGroup.selectAll("text")
@@ -230,13 +250,9 @@ d3.csv("../assets/data/data.csv").then(journData=> {
       // get value of selection
       var value = d3.select(this).attr("value");
       if (value !== chosenXAxis) {
-
         // replaces chosenXAxis with value
         chosenXAxis = value;
 
-        // console.log(chosenXAxis)
-
-        // functions here found above csv import
         // updates x scale for new data
         xLinearScale = xScale(journData, chosenXAxis);
 
@@ -247,7 +263,7 @@ d3.csv("../assets/data/data.csv").then(journData=> {
         circlesGroup = renderCircles(circlesGroup, xLinearScale, chosenXAxis);
 
         // updates tooltips with new info
-        circlesGroup = updateToolTip(chosenXAxis, circlesGroup);
+        circlesGroup = updateToolTip(chosenXAxis, circlesGroup, chosenYAxis);
 
         // changes classes to change bold text
         if (chosenXAxis === "age") {
