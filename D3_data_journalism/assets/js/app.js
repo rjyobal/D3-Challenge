@@ -53,9 +53,13 @@ function renderAxes(newXScale, xAxis) {
 // new circles
 function renderCircles(circlesGroup, newXScale, chosenXAxis) {
 
-  circlesGroup.transition()
+  circlesGroup.selectAll('circle').transition()
     .duration(1000)
     .attr("cx", d => newXScale(d[chosenXAxis]));
+
+  circlesGroup.selectAll('text').transition()
+    .duration(1000)
+    .attr("dx", d => newXScale(d[chosenXAxis])-10);
 
   return circlesGroup;
 }
@@ -96,45 +100,53 @@ function updateToolTip(chosenXAxis, circlesGroup) {
 d3.csv("../assets/data/data.csv").then(journData=> {
   //if (err) throw err;
 
-  // parse data
+  //Step 4: Parse the data
   journData.forEach(function(data) {
     data.poverty = +data.poverty;
     data.healthcare = +data.healthcare;
     data.age = +data.age;
+    data.abbr = data.abbr;
   });
 
-  // xLinearScale function above csv import
+  //Step 5: Create the scales
   let xLinearScale = xScale(journData, chosenXAxis);
-
-  // Create y scale function
   let yLinearScale = d3.scaleLinear()
     .domain([0, d3.max(journData, d => d.healthcare)])
     .range([height, 0]);
 
-  // Create initial axis functions
+  //Setup 7: Create the Axes
   let bottomAxis = d3.axisBottom(xLinearScale);
   let leftAxis = d3.axisLeft(yLinearScale);
 
+  //Step 8: Append the Axes
   // append x axis
   let xAxis = chartGroup.append("g")
     .classed("x-axis", true)
     .attr("transform", `translate(0, ${height})`)
     .call(bottomAxis);
-
   // append y axis
   chartGroup.append("g")
     .call(leftAxis);
 
-  // append initial circles
-  var circlesGroup = chartGroup.selectAll("circle")
+  //Step 9: Setup circles generators
+  var circlesGroup = chartGroup.selectAll("g")
     .data(journData)
     .enter()
-    .append("circle")
+    .append("g")
+
+  let circles = circlesGroup.append('circle')
     .attr("cx", d => xLinearScale(d[chosenXAxis]))
     .attr("cy", d => yLinearScale(d.healthcare))
     .attr("r", 15)
-    .attr("fill", "blue");
+    .attr("fill", "blue")
+    
+    circlesGroup.append('text')
+    .attr('dx', d => xLinearScale(d[chosenXAxis])-8)
+    .attr('dy', d => yLinearScale(d.healthcare)+5)
+    .classed('circleText', true)
+    .text(d=>d.abbr);
 
+  //Step 10: Add AXES labels
   // Create group for two x-axis labels
   let labelsGroup = chartGroup.append("g")
     .attr("transform", `translate(${width / 2}, ${height + 20})`);

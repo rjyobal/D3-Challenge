@@ -43,3 +43,10 @@ body {
   border: 0;
   border-radius: 10px;
 }
+
+.circleText {
+  font-family: Helvetica, Arial, sans-serif;
+  font-size: 12px;
+  fill: rgb(255, 255, 255);
+  stroke-width: 0;
+}
