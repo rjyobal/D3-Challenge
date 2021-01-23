@@ -151,19 +151,26 @@ d3.csv("../assets/data/data.csv").then(journData=> {
   let labelsGroup = chartGroup.append("g")
     .attr("transform", `translate(${width / 2}, ${height + 20})`);
 
-  let hairLengthLabel = labelsGroup.append("text")
+  let povertyLabel = labelsGroup.append("text")
     .attr("x", 0)
     .attr("y", 20)
     .attr("value", "poverty") // value to grab for event listener
     .classed("active", true)
     .text("In Poverty (%)");
 
-  let albumsLabel = labelsGroup.append("text")
+  let ageLabel = labelsGroup.append("text")
     .attr("x", 0)
     .attr("y", 40)
     .attr("value", "age") // value to grab for event listener
     .classed("inactive", true)
     .text("Age (Median)");
+
+  let householdLabel = labelsGroup.append("text")
+    .attr("x", 0)
+    .attr("y", 60)
+    .attr("value", "income") // value to grab for event listener
+    .classed("inactive", true)
+    .text("Household Income (Median)");
 
   // append y axis
   chartGroup.append("text")
@@ -204,18 +211,34 @@ d3.csv("../assets/data/data.csv").then(journData=> {
 
         // changes classes to change bold text
         if (chosenXAxis === "age") {
-          albumsLabel
+          ageLabel
             .classed("active", true)
             .classed("inactive", false);
-          hairLengthLabel
+          povertyLabel
+            .classed("active", false)
+            .classed("inactive", true);
+          householdLabel
             .classed("active", false)
             .classed("inactive", true);
         }
-        else {
-          albumsLabel
+        else if (chosenXAxis === "poverty"){
+          ageLabel
             .classed("active", false)
             .classed("inactive", true);
-          hairLengthLabel
+          povertyLabel
+            .classed("active", true)
+            .classed("inactive", false);
+          householdLabel
+            .classed("active", false)
+            .classed("inactive", true);
+        }else{
+          ageLabel
+            .classed("active", false)
+            .classed("inactive", true);
+          povertyLabel
+            .classed("active", false)
+            .classed("inactive", true);
+          householdLabel
             .classed("active", true)
             .classed("inactive", false);
         }
