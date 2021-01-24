@@ -139,7 +139,7 @@ function updateToolTip(chosenXAxis, circlesGroup, chosenYAxis) {
 }
 
 //Step 3: Import data from file
-d3.csv("../assets/data/data.csv").then(journData=> {
+d3.csv("assets/data/data.csv").then(journData=> {
   //if (err) throw err;
 
   //Step 4: Parse the data
