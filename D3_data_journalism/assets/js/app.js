@@ -88,7 +88,10 @@ function renderYAxes(newYScale, yAxis) {
   return yAxis;
 }
 
-
+/**
+ * Change color of circles based on x-Axis selection
+ * @param {string} chosenAxis Selected Axis
+ */
 function colorCircle(chosenAxis){
   switch (chosenAxis){
     case 'age':
