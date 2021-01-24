@@ -34,8 +34,8 @@ let chosenYAxis = "healthcare";
 function xScale(data, chosenXAxis) {
   // create scales
   var xLinearScale = d3.scaleLinear()
-    .domain([d3.min(data, d => d[chosenXAxis]) * 0.8,
-      d3.max(data, d => d[chosenXAxis]) * 1.2
+    .domain([d3.min(data, d => d[chosenXAxis]),
+      d3.max(data, d => d[chosenXAxis])
     ])
     .range([0, width]);
 
@@ -50,8 +50,8 @@ function xScale(data, chosenXAxis) {
 function yScale(data, chosenYAxis) {
   // create scales
   var yLinearScale = d3.scaleLinear()
-    .domain([d3.min(data, d => d[chosenYAxis]) * 0.8,
-      d3.max(data, d => d[chosenYAxis]) * 1.2
+    .domain([d3.min(data, d => d[chosenYAxis]),
+      d3.max(data, d => d[chosenYAxis])
     ])
     .range([height, 0]);
 
@@ -168,7 +168,6 @@ function updateToolTip(chosenXAxis, circlesGroup, chosenYAxis) {
 //Step 3: Import data from file
 console.log(window.location.href)
 d3.csv("assets/data/data.csv").then(journData=> {
-  //if (err) throw err;
 
   //Step 4: Parse the data
   journData.forEach(function(data) {
@@ -179,6 +178,8 @@ d3.csv("assets/data/data.csv").then(journData=> {
     data.obesity = +data.obesity;
     data.smokes = +data.smokes;
     data.abbr = data.abbr;
+    data.id = +data.id;
+    console.log(data.abbr);
   });
 
   //Step 5 & 6: Create the scales
@@ -204,11 +205,13 @@ d3.csv("assets/data/data.csv").then(journData=> {
     .data(journData)
     .enter()
     .append("g")
+    .attr("id",d=>d.state)
 
-  let circles = circlesGroup.append('circle')
+  //let circles = circlesGroup.append('circle')
+    circlesGroup.append('circle')
     .attr("cx", d => xLinearScale(d[chosenXAxis]))
     .attr("cy", d => yLinearScale(d[chosenYAxis]))
-    .attr("r", 15)
+    .attr("r", 12)
     .attr("fill", "blue")
     
     circlesGroup.append('text')
