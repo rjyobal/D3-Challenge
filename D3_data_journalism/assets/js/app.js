@@ -88,6 +88,20 @@ function renderYAxes(newYScale, yAxis) {
   return yAxis;
 }
 
+
+function colorCircle(chosenAxis){
+  switch (chosenAxis){
+    case 'age':
+      return 'red';
+      break;
+    case 'income':
+      return 'green';
+      break;
+    default:
+      return 'blue';
+  }
+}
+
 /**
  * Render circles group with transition based on selection
  * @param {object} circlesGroup D3 SVG circles group
@@ -99,12 +113,13 @@ function renderYAxes(newYScale, yAxis) {
 function renderCircles(circlesGroup, newXScale, chosenXAxis, newYScale, chosenYAxis) {
 
   circlesGroup.selectAll('circle').transition()
-    .duration(1000)
+    .duration(500)
     .attr("cx", d => newXScale(d[chosenXAxis]))
-    .attr("cy", d => newYScale(d[chosenYAxis]));
+    .attr("cy", d => newYScale(d[chosenYAxis]))
+    .attr("fill", colorCircle(chosenXAxis));
 
   circlesGroup.selectAll('text').transition()
-    .duration(1000)
+    .duration(500)
     .attr("dx", d => newXScale(d[chosenXAxis])-10)
     .attr("dy", d => newYScale(d[chosenYAxis])+5);
 
@@ -166,7 +181,7 @@ function updateToolTip(chosenXAxis, circlesGroup, chosenYAxis) {
 }
 
 //Step 3: Import data from file
-console.log(window.location.href)
+//console.log(window.location.href)
 d3.csv("assets/data/data.csv").then(journData=> {
 
   //Step 4: Parse the data
