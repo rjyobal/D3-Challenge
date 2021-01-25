@@ -1,7 +1,7 @@
 console.log('JS Connected');
 
 //Step 1: Setup chart
-let svgWidth = 900;
+let svgWidth = 800;
 let svgHeight = 600;
 let margin = {
   top: 20,
@@ -34,8 +34,8 @@ let chosenYAxis = "healthcare";
 function xScale(data, chosenXAxis) {
   // create scales
   var xLinearScale = d3.scaleLinear()
-    .domain([d3.min(data, d => d[chosenXAxis]),
-      d3.max(data, d => d[chosenXAxis])
+    .domain([d3.min(data, d => d[chosenXAxis]) * 0.9,
+      d3.max(data, d => d[chosenXAxis]) * 1.1
     ])
     .range([0, width]);
 
@@ -50,8 +50,8 @@ function xScale(data, chosenXAxis) {
 function yScale(data, chosenYAxis) {
   // create scales
   var yLinearScale = d3.scaleLinear()
-    .domain([d3.min(data, d => d[chosenYAxis]),
-      d3.max(data, d => d[chosenYAxis])
+    .domain([d3.min(data, d => d[chosenYAxis]) * 0.8,
+      d3.max(data, d => d[chosenYAxis]) * 1.1
     ])
     .range([height, 0]);
 
@@ -156,7 +156,7 @@ function updateToolTip(chosenXAxis, circlesGroup, chosenYAxis) {
   if (chosenYAxis === "healthcare") {
     ylabel = "Healthcare:";
   } 
-  else if (chosenYAxis === "obese"){
+  else if (chosenYAxis === "obesity"){
     ylabel = "Obese:";
   }
   else{
@@ -219,7 +219,7 @@ d3.csv("assets/data/data.csv").then(journData=> {
     .call(leftAxis);
 
   //Step 9: Setup circles generators
-  var circlesGroup = chartGroup.selectAll("g")
+  var circlesGroup = chartGroup.selectAll(null)
     .data(journData)
     .enter()
     .append("g")
